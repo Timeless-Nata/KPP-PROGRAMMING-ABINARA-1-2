@@ -1,8 +1,12 @@
-ting#include <mujoco/mujoco.h>
+#include <mujoco/mujoco.h>
 #include <GLFW/glfw3.h>
 #include <cstdio>
 #include <vector>
 #include <algorithm>
+using namespace std;
+
+mjModel* m = nullptr;
+mjData* d = nullptr;
 
 bool button_left = false;
 bool button_middle = false;
@@ -17,9 +21,58 @@ void mouse_button_callback(GLFWwindow* window, int button, int act, int mods) {
     glfwGetCursorPos(window, &lastx, &lasty);
 }
 
+void keyboard_callback(GLFWwindow* window, int key, int scancode, int act, int mods) {
+    if (act != GLFW_PRESS) return;
+    double step = 0.1;
+    switch (key) {
+        case GLFW_KEY_Q:
+            d->ctrl[0] += step;
+            printf("q key ditekan\n");
+            break;
+
+        case GLFW_KEY_A:
+            d->ctrl[0] -= step;
+            printf("a key ditekan\n");
+            break;
+
+        case GLFW_KEY_W:
+            d->ctrl[1] += step;
+            printf("w key ditekan\n");
+            break;
+
+        case GLFW_KEY_S:
+            d->ctrl[1] -= step;
+            printf("s key ditekan\n");
+            break;
+
+        case GLFW_KEY_E:
+            d->ctrl[2] += step;
+            printf("e key ditekan\n");
+            break;
+
+        case GLFW_KEY_D:
+            d->ctrl[2] -= step;
+            printf("d key ditekan\n");
+            break;
+
+        case GLFW_KEY_R:
+            d->ctrl[3] += step;
+            printf("r key ditekan\n");
+            break;
+
+        case GLFW_KEY_F:
+            d->ctrl[3] -= step;
+            printf("f key ditekan\n");
+            break;
+
+        case GLFW_KEY_SPACE:
+            mj_resetData(m, d);
+            printf("Ulang simulasi\n");
+            break;
+    }
+}
+
 int main() {
-    mjModel* m = nullptr;
-    mjData* d = nullptr;
     mjvScene scn;
     mjvCamera cam;
     mjvOption opt;
@@ -27,6 +80,7 @@ int main() {
 
     char error[1000] = "Couldn't load model";
     m = mj_loadXML("main.xml", nullptr, error, sizeof(error));
+
     if (!m) {
         fprintf(stderr, "%s\n", error);
         return 1;
@@ -38,6 +92,11 @@ int main() {
             fprintf(stderr, "GLFW Error (%d): %s\n", error, description);
         });
 
+    if (!glfwInit()) {
+            fprintf(stderr, "glfwInit() gagal\n");
+            return 1;
+        }
+
     GLFWwindow* window = glfwCreateWindow(1200, 900, "Arm 4DOF Sim", nullptr, nullptr);
     if(!window) {
         fprintf(stderr, "glfwCreateWindow() gagal\n");
@@ -45,6 +104,33 @@ int main() {
         return 1;
     }
 
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
+
     glfwSetMouseButtonCallback(window, mouse_button_callback);
 
+    mjv_defaultCamera(&cam);
+    mjv_defaultOption(&opt);
+    mjv_defaultScene(&scn);
+    mjr_defaultContext(&con);
+
+    mjv_makeScene(m, &scn, 2000);
+    mjr_makeContext(m, &con, mjFONTSCALE_150);
+
+    cam.distance = 1;
+
+    while (!glfwWindowShouldClose(window)) {
+        mj_step(m, d);
+
+        mjrRect viewport = {0, 0, 0, 0};
+        glfwGetFramebufferSize(window, &viewport.width, &viewport.height);
+
+        mjv_updateScene(m, d, &opt, nullptr, &cam, mjCAT_ALL, &scn);
+        mjr_render(viewport, &scn, &con);
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+        glfwSetMouseButtonCallback(window, mouse_button_callback);
+        glfwSetKeyCallback(window, keyboard_callback);
+    }
 }
