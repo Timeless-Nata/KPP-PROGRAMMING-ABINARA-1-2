@@ -8,8 +8,11 @@ GLFW := $(shell pkg-config --cflags --libs glfw3)
 INCLUDES := -I$(MUJOCO)/include -I$(EIGEN)
 LIBS := -L$(MUJOCO) -lmujoco -Wl,-rpath,$(MUJOCO) $(GLFW)
 
-sim: callback.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) callback.cpp -o sim $(LIBS)
+SOURCE := ../callback/callback.cpp
+TARGET := sim
+
+$(TARGET): $(SOURCE)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SOURCE) -o $(TARGET) $(LIBS)
 
 clean:
-	rm -f sim
+	rm -f $(TARGET)
