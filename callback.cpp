@@ -21,6 +21,37 @@ void mouse_button_callback(GLFWwindow* window, int button, int act, int mods) {
     glfwGetCursorPos(window, &lastx, &lasty);
 }
 
+void print_joint_feedback() {
+    const char* nama_sensor[] = {
+        "muter_pos",
+        "bahu_pos",
+        "lengan_pos",
+        "telapak_pos",
+        "jari1_pos",
+        "jari2_pos",
+        "jaribawah1_pos",
+        "jaribawah2_pos"
+    };
+
+    printf("\n=== Posisi Joint ===\n");
+
+    for (const char* name : nama_sensor) {
+        int id_sensor = mj_name2id(
+            m, mjOBJ_SENSOR, name
+        );
+
+        if (id_sensor == -1) {
+            printf("%s: sensor tidak ditemukan\n", name);
+            continue;
+        }
+
+        int adr = m->sensor_adr[id_sensor];
+
+        printf("%s: %.4f\n",
+               name, d->sensordata[adr]);
+    }
+}
+
 void keyboard_callback(GLFWwindow* window, int key, int scancode, int act, int mods) {
     if (act != GLFW_PRESS) return;
     double step = 0.1;
@@ -68,6 +99,10 @@ void keyboard_callback(GLFWwindow* window, int key, int scancode, int act, int m
         case GLFW_KEY_SPACE:
             mj_resetData(m, d);
             printf("Ulang simulasi\n");
+            break;
+
+        case GLFW_KEY_LEFT_SHIFT:
+            print_joint_feedback();
             break;
     }
 }
