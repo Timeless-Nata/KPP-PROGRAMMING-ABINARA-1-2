@@ -1,0 +1,72 @@
+<mujoco model="arm">
+  <option  gravity="0 0 0" timestep="0.002" />
+  <default>
+    <joint damping="0.1" />
+    <geom rgba="0.6 0.6 0.65 1" />
+  </default>
+  <compiler angle="radian"/>
+
+  <worldbody>
+    <light diffuse=" .6 .6 .6" pos="0 0 0.5" dir="0 0 -1" />
+    <geom size="0.075 0.075 0.005" pos="0 0 0.025" type="box" rgba="0.75 0.75 0.75 1"/>
+    <geom size="0.065 0.065 0.03" pos="0 0 0.06" type="box"/>
+    <body name="rotator" pos="0 0 0.095">
+      <joint name="hip" pos="0 0 0" axis="0 0 1"/>
+      <geom size="0.06 0.005" type="cylinder"/>
+      <geom size="0.04 0.01 0.035" pos="0 0.029 0.04" type="box"/>
+      <geom size="0.04 0.01 0.035" pos="0 -0.029 0.04" type="box"/>
+      <body name="upper_arm" pos="0.02 0.001 0.06" quat="0.707105 0 0.707108 0">
+        <joint name="shoulder" pos="0 0 0" axis="0 1 0" range="-1.5708 0.54" actuatorfrcrange="-30 30"/>
+        <geom size="0.018 0.09" pos="0 0 0.05" type="cylinder"/>
+        <body name="lower_arm" pos="0.005 0.0359 0.12">
+          <joint name="arm" pos="0 0 0" axis="0 1 0" range="0 2.9" actuatorfrcrange="-30 30"/>
+          <geom size="0.018 0.09" pos="0 0 0.08" type="cylinder"/>
+          <body name="base_hand" pos="-0.0018 -0.038 0.16" quat="0.707105 0 0.707108 0">
+            <joint name="hand" pos="0 0 0" axis="0 1 0" range="-3 2" actuatorfrcrange="-30 30"/>
+            <geom size="0.01 0.02 0.01" type="box"/>
+            <body name="upper_finger_right" pos="0 0.004 0.014" quat="0.690825 0.150859 0.690828 -0.15086">
+              <joint name="finger1" pos="0 0 0" axis="1 0 0" range="-0.4 0.5" actuatorfrcrange="-30 30"/>
+              <geom size="0.004 0.018" pos="0 0 -0.013" type="cylinder" rgba="0.75 0.75 0.75 1"/>
+              <body name="lower_finger_right" pos="-0.0045 0 -0.03">
+                <joint name="finger1_lower" pos="0 0 0" axis="1 0 0" range="-1.2 0" actuatorfrcrange="-30 30"/>
+                <geom size="0.0005 0.0035 0.0135" pos="0 0 -0.01" type="box"/>
+              </body>
+            </body>
+            <body name="upper_finger_left" pos="0 -0.004 0.014" quat="0.690825 -0.150859 0.690828 0.15086">
+              <joint name="finger2" pos="0 0 0" axis="1 0 0" range="-0.5 0.4" actuatorfrcrange="-30 30"/>
+              <geom size="0.004 0.018" pos="0 0 -0.013" type="cylinder" rgba="0.75 0.75 0.75 1"/>
+              <body name="lower_finger_left" pos="-0.0045 0 -0.03">
+                <joint name="finger2_lower" pos="0 0 0" axis="1 0 0" range="0 1.2" actuatorfrcrange="-30 30"/>
+                <geom size="0.0005 0.0035 0.0135" pos="0 0 -0.01" type="box"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+      <motor name="muter" gear="1" joint="hip" />
+      <motor name="bahu" gear="1" joint="shoulder" />
+      <motor name="lengan" gear="1" joint="arm" />
+      <motor name="telapak" gear="1" joint="hand" />
+      <motor name="jari1" gear="1" joint="finger1" />
+      <motor name="jari2" gear="1" joint="finger2" />
+      <motor name="jaribawah1" gear="1" joint="finger1_lower" />
+      <motor name="jaribawah2" gear="1" joint="finger2_lower" />
+  </actuator>
+  
+  <sensor>
+      <jointpos joint="hip" name="muter_pos" />
+      <jointpos joint="shoulder" name="bahu_pos" />
+      <jointpos joint="arm" name="lengan_pos" />
+      <jointpos joint="hand" name="telapak_pos" />
+      <jointpos joint="finger1" name="jari1_pos" />
+      <jointpos joint="finger2" name="jari2_pos" />
+      <jointpos joint="finger1_lower" name="jaribawah1_pos" />
+      <jointpos joint="finger2_lower" name="jaribawah2_pos" />
+  </sensor>
+</mujoco>
+
+
