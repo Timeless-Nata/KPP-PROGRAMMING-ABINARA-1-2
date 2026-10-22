@@ -1,11 +1,26 @@
 #include <GLFW/glfw3.h>
 #include <mujoco/mujoco.h>
 #include <ros/ros.h>
+#include <sensor_msgs/JointState.h>
 
 #include <string>
 
+// Mengubah keadaan joint di MuJoCo menjadi pesan ROS.
+// Asumsi: semua joint adalah hinge (1 DOF), sesuai main.xml.
+sensor_msgs::JointState makeJointState(const mjModel* m, const mjData* d) {
+  sensor_msgs::JointState js;
+  js.header.stamp = ros::Time::now();
+  for (int i = 0; i < m->njnt; ++i) {
+    js.name.push_back(mj_id2name(m, mjOBJ_JOINT, i));
+    js.position.push_back(d->qpos[m->jnt_qposadr[i]]);
+    js.velocity.push_back(d->qvel[m->jnt_dofadr[i]]);
+  }
+  return js;
+}
+
 int main(int argc, char** argv) {
   ros::init(argc, argv, "mujoco_sim");
+  ros::NodeHandle nh;
   ros::NodeHandle pnh("~");
 
   std::string model_path;
@@ -48,14 +63,17 @@ int main(int argc, char** argv) {
   mjr_makeContext(m, &con, mjFONTSCALE_150);
   cam.distance = 1;
 
+  ros::Publisher joint_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
+
   const double wall_start = glfwGetTime();
 
   while (ros::ok() && !glfwWindowShouldClose(window)) {
     ros::spinOnce();
 
-    // Jalankan simulasi sampai waktu simulasi menyusul waktu nyata.
     const double target_time = glfwGetTime() - wall_start;
     while (d->time < target_time) mj_step(m, d);
+
+    joint_pub.publish(makeJointState(m, d));
 
     mjrRect viewport = {0, 0, 0, 0};
     glfwGetFramebufferSize(window, &viewport.width, &viewport.height);
