@@ -29,3 +29,6 @@ target_link_libraries(hello_node ${catkin_LIBRARIES})
 
 add_executable(mujoco_sim src/mujoco_sim_node.cpp)
 target_link_libraries(mujoco_sim ${catkin_LIBRARIES} ${MUJOCO_LIB} ${GLFW3_LIBRARIES})
+
+add_executable(triangle_publisher src/triangle_publisher.cpp)
+target_link_libraries(triangle_publisher ${catkin_LIBRARIES})
