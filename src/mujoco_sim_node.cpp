@@ -2,12 +2,27 @@
 #include <mujoco/mujoco.h>
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
+#include <std_msgs/Float64MultiArray.h>
 
 #include <string>
 
-// Mengubah keadaan joint di MuJoCo menjadi pesan ROS.
+// Global karena fungsi callback ROS tidak bisa menerima argumen tambahan.
+mjModel* m = nullptr;
+mjData* d = nullptr;
+
+// Dipanggil ros::spinOnce() setiap ada pesan di joint_cmd.
+// Isi pesan = sudut target (rad) per actuator, urutannya sama dengan <actuator> di main.xml.
+void jointCmdCallback(const std_msgs::Float64MultiArray::ConstPtr& msg) {
+  if (static_cast<int>(msg->data.size()) != m->nu) {
+    ROS_WARN_THROTTLE(1.0, "joint_cmd harus berisi %d nilai, diterima %zu", m->nu,
+                      msg->data.size());
+    return;
+  }
+  for (int i = 0; i < m->nu; ++i) d->ctrl[i] = msg->data[i];
+}
+
 // Asumsi: semua joint adalah hinge (1 DOF), sesuai main.xml.
-sensor_msgs::JointState makeJointState(const mjModel* m, const mjData* d) {
+sensor_msgs::JointState makeJointState() {
   sensor_msgs::JointState js;
   js.header.stamp = ros::Time::now();
   for (int i = 0; i < m->njnt; ++i) {
@@ -30,12 +45,12 @@ int main(int argc, char** argv) {
   }
 
   char error[1000] = "";
-  mjModel* m = mj_loadXML(model_path.c_str(), nullptr, error, sizeof(error));
+  m = mj_loadXML(model_path.c_str(), nullptr, error, sizeof(error));
   if (!m) {
     ROS_FATAL("Gagal load model: %s", error);
     return 1;
   }
-  mjData* d = mj_makeData(m);
+  d = mj_makeData(m);
   ROS_INFO("Model dimuat: %d joint, %d actuator", m->njnt, m->nu);
 
   if (!glfwInit()) {
@@ -64,16 +79,17 @@ int main(int argc, char** argv) {
   cam.distance = 1;
 
   ros::Publisher joint_pub = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
+  ros::Subscriber cmd_sub = nh.subscribe("joint_cmd", 1, jointCmdCallback);
 
   const double wall_start = glfwGetTime();
 
   while (ros::ok() && !glfwWindowShouldClose(window)) {
-    ros::spinOnce();
+    ros::spinOnce();  // di sini jointCmdCallback dipanggil kalau ada pesan masuk
 
     const double target_time = glfwGetTime() - wall_start;
     while (d->time < target_time) mj_step(m, d);
 
-    joint_pub.publish(makeJointState(m, d));
+    joint_pub.publish(makeJointState());
 
     mjrRect viewport = {0, 0, 0, 0};
     glfwGetFramebufferSize(window, &viewport.width, &viewport.height);

@@ -1,5 +1,5 @@
 <mujoco model="arm">
-  <option  gravity="0 0 0" timestep="0.002" />
+  <option gravity="0 0 0" timestep="0.002" integrator="implicitfast"/>
   <default>
     <joint damping="0.1" />
     <geom rgba="0.6 0.6 0.65 1" />
@@ -48,14 +48,14 @@
   </worldbody>
 
   <actuator>
-      <motor name="muter" gear="1" joint="hip" />
-      <motor name="bahu" gear="1" joint="shoulder" />
-      <motor name="lengan" gear="1" joint="arm" />
-      <motor name="telapak" gear="1" joint="hand" />
-      <motor name="jari1" gear="1" joint="finger1" />
-      <motor name="jari2" gear="1" joint="finger2" />
-      <motor name="jaribawah1" gear="1" joint="finger1_lower" />
-      <motor name="jaribawah2" gear="1" joint="finger2_lower" />
+      <position name="muter"      joint="hip"           kp="5"    kv="0.5"/>
+      <position name="bahu"       joint="shoulder"      kp="5"    kv="0.5"/>
+      <position name="lengan"     joint="arm"           kp="5"    kv="0.5"/>
+      <position name="telapak"    joint="hand"          kp="2"    kv="0.2"/>
+      <position name="jari1"      joint="finger1"       kp="0.05" kv="0.005"/>
+      <position name="jari2"      joint="finger2"       kp="0.05" kv="0.005"/>
+      <position name="jaribawah1" joint="finger1_lower" kp="0.05" kv="0.005"/>
+      <position name="jaribawah2" joint="finger2_lower" kp="0.05" kv="0.005"/>
   </actuator>
 
   <sensor>
