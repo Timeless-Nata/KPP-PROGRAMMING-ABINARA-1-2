@@ -1,5 +1,5 @@
-// Menerbitkan titik target end-effector yang menyusuri segitiga sama sisi.
-// Segitiga ada di bidang tegak (x-z) dengan y tetap, berpusat di (center_x, center_y, center_z).
+// Menerbitkan titik target end-effector yang menyusuri segitiga sama sisi
+// di bidang tegak (x = depan, z = atas), dengan y tetap.
 
 #include <geometry_msgs/PointStamped.h>
 #include <ros/ros.h>
@@ -11,31 +11,28 @@ int main(int argc, char** argv) {
   ros::NodeHandle nh;
   ros::NodeHandle pnh("~");
 
-  double cx, cy, cz;
-  if (!(pnh.getParam("center_x", cx) && pnh.getParam("center_y", cy) &&
-        pnh.getParam("center_z", cz))) {
-    ROS_FATAL("Parameter ~center_x, ~center_y, ~center_z harus di-set");
-    return 1;
-  }
-  double side = pnh.param("side", 0.06);      // panjang sisi (m)
-  double period = pnh.param("period", 9.0);   // waktu satu putaran penuh (detik)
-  double rate_hz = pnh.param("rate", 50.0);   // frekuensi publish (Hz)
+  // Pusat dan ukuran segitiga (meter). Nilai ini bawaan, bisa diubah lewat parameter.
+  const double cx = pnh.param("center_x", 0.22);
+  const double cy = pnh.param("center_y", -0.0011);
+  const double cz = pnh.param("center_z", 0.155);
+  const double side = pnh.param("side", 0.06);      // panjang sisi
+  const double period = pnh.param("period", 9.0);   // detik per satu putaran
 
-  // Tiga titik sudut segitiga sama sisi di bidang x-z.
+  // Tiga titik sudut: A di atas, B kiri-bawah, C kanan-bawah.
   const double R = side / std::sqrt(3.0);  // jarak pusat ke tiap sudut
   const double vx[3] = {cx, cx - side / 2.0, cx + side / 2.0};
   const double vz[3] = {cz + R, cz - R / 2.0, cz - R / 2.0};
 
   ros::Publisher pub = nh.advertise<geometry_msgs::PointStamped>("ee_target", 10);
-  ros::Rate rate(rate_hz);
+  ros::Rate rate(50);  // 50 kali per detik
   const ros::Time start = ros::Time::now();
 
   while (ros::ok()) {
-    // Posisi di sepanjang keliling: 0..3, bagian bulat = sisi ke-i, sisanya = seberapa jauh di sisi itu.
+    // s berjalan 0 -> 3 selama satu putaran. Bagian bulat = sisi mana, desimal = sudah sejauh apa.
     const double s = std::fmod((ros::Time::now() - start).toSec() / period, 1.0) * 3.0;
-    const int i = static_cast<int>(s);
-    const double f = s - i;
-    const int j = (i + 1) % 3;
+    const int i = static_cast<int>(s);   // titik awal sisi ini
+    const int j = (i + 1) % 3;           // titik akhir sisi ini
+    const double f = s - i;              // 0..1 di sepanjang sisi
 
     geometry_msgs::PointStamped p;
     p.header.stamp = ros::Time::now();
