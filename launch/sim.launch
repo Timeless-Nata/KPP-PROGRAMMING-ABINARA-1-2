@@ -1,0 +1,17 @@
+<launch>
+  <!-- Namespace: semua topic jadi /robot1/... (siap untuk robot2 kalau bonus) -->
+  <arg name="ns" default="robot1"/>
+  <arg name="model" default="$(find kpp_ros_mujoco)/model/main.xml"/>
+
+  <group ns="$(arg ns)">
+    <node pkg="kpp_ros_mujoco" type="mujoco_sim" name="mujoco_sim" output="screen">
+      <param name="model_path" value="$(arg model)"/>
+    </node>
+
+    <node pkg="kpp_ros_mujoco" type="ik_controller" name="ik_controller" output="screen">
+      <param name="model_path" value="$(arg model)"/>
+    </node>
+
+    <node pkg="kpp_ros_mujoco" type="triangle_publisher" name="triangle_publisher" output="screen"/>
+  </group>
+</launch>
