@@ -5,6 +5,12 @@
 #include <sensor_msgs/JointState.h>
 #include <std_msgs/Float64MultiArray.h>
 
+#include <algorithm>H
+#include <cmath>
+#include <string>
+#include <vector>
+
+
 using namespace ros;
 using namespace std;
 
