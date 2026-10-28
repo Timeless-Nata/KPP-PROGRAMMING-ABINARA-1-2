@@ -1,0 +1,8 @@
+prefix=/home/nata-negara/Abinara-1/kpp-magang-4/devel
+
+Name: kpp_kinematic
+Description: Description of kpp_kinematic
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
