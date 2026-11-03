@@ -7,6 +7,10 @@ catkin_install_python(PROGRAMS
   scripts/viewer_node.py
   scripts/shapes_node.py
   scripts/colorful_node.py
+  scripts/denoise_node.py
+  scripts/denoise_node.py
   scripts/colorful_node.py
+  scripts/denoise_node.py
+  scripts/denoise_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

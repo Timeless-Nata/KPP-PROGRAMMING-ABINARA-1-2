@@ -7,5 +7,4 @@
 # new environment variables
 
 # modified environment variables
-export PATH='/opt/ros/noetic/bin:/home/nata-negara/.local/bin:/home/nata-negara/.local/bin:/home/nata-negara/.local/bin:/home/nata-negara/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 export PWD='/home/nata-negara/Abinara-1/kpp-magang-5/build'
