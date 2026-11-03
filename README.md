@@ -82,6 +82,7 @@ Semua parameter di bawah relatif terhadap ukuran frame atau terhadap isi frame i
 
 ### 1. Where Are The Shapes?
 <img width="1183" height="255" alt="image" src="https://github.com/user-attachments/assets/6be6f742-1b26-46f6-9fa0-abfb36b4fcbb" />
+
 1. Warna latar diestimasi dari **median piksel tepi frame**, lalu jarak tiap piksel ke warna latar dihitung di ruang warna LAB. Cara ini tidak bergantung pada warna bentuk maupun latar.
 2. **Otsu threshold** pada peta jarak, lalu morfologi *opening* dan *closing* (kernel elips 5×5).
 3. `findContours` (hanya kontur luar), kontur dengan luas di bawah 0,2% luas frame dibuang.
@@ -89,6 +90,7 @@ Semua parameter di bawah relatif terhadap ukuran frame atau terhadap isi frame i
 
 ### 2. How Colorful?
 <img width="1366" height="229" alt="image" src="https://github.com/user-attachments/assets/86b6ab86-bc36-4afe-8ca5-275de85d2cb2" />
+
 1. Warna **dikuantisasi** per kanal (8 level per kanal, 512 kemungkinan warna) agar anti-aliasing dan kompresi tidak menghasilkan ribuan "warna unik" palsu.
 2. Kemunculan dihitung **per piksel** dengan `np.bincount` pada seluruh frame (bukan per region).
 3. Sebuah warna dianggap unik jika porsinya minimal 0,5% dari seluruh piksel.
@@ -96,6 +98,7 @@ Semua parameter di bawah relatif terhadap ukuran frame atau terhadap isi frame i
 
 ### 3. Locate It, Please.
 <img width="1366" height="229" alt="image" src="https://github.com/user-attachments/assets/14ffb6ba-2bad-4e73-88f0-b3d928200b10" />
+
 Mendeteksi semua objek (berlian yang berjatuhan) tanpa klasifikasi.
 1. Frame diperkecil ke lebar kerja 960 px agar tetap real-time. Warna latar = **median seluruh frame**, lalu jarak warna LAB per piksel.
 2. **Hysteresis threshold**: ambang kuat dari Otsu, ambang lemah 0,4× ambang kuat. Hanya komponen lemah yang memuat piksel kuat yang dipertahankan, sehingga seluruh badan berlian tertangkap dan bukan hanya kilauannya.
@@ -104,6 +107,7 @@ Mendeteksi semua objek (berlian yang berjatuhan) tanpa klasifikasi.
 
 ### 4. I Don't Think It's Reliable.
 <img width="1435" height="213" alt="image" src="https://github.com/user-attachments/assets/bfdff1be-185d-48e1-8d65-e170246fe239" />
+
 1. Grayscale lalu **Otsu threshold**. Mask dibalik otomatis jika piksel putih mendominasi, sehingga objek selalu putih.
 2. *Opening* menghapus bintik noise dan *closing* menutup lubang kecil (kernel 0,4% sisi pendek frame).
 3. `findContours` + `contourArea`: kontur dengan luas di bawah 2% dari kontur terbesar dianggap noise dan dihapus. Lubang pada objek (misalnya lubang donat) tetap utuh.
@@ -111,6 +115,7 @@ Mendeteksi semua objek (berlian yang berjatuhan) tanpa klasifikasi.
 
 ### 5. Does It Match?
 <img width="1226" height="180" alt="image" src="https://github.com/user-attachments/assets/9a743a84-7aaf-4575-a758-8eb958f856c8" />
+
 Mendeteksi karakter **Knight** (Hollow Knight) pada video gameplay, dengan variasi warna, lighting, dan transformasi.
 - **Model:** YOLO26n, dilatih dengan `tools/train.py` pada dataset yang disediakan (597 gambar train, 75 gambar test, satu kelas).
 - **Split validasi:** 15% dari data train (89 gambar) dipisahkan dengan seed tetap, sehingga train 508 gambar, val 89, dan test 75. Test tidak dipakai saat training.
