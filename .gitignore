@@ -1,13 +1,14 @@
-# build ROS
+cd ~/Abinara-1/kpp-magang-5
+cat > .gitignore << 'EOF'
 build/
 devel/
 install/
 **/__pycache__/
 *.pyc
-
-# data besar: video, arsip, dan dataset (milik panitia)
-*.zip
 src/kpp_cv/data/**/runs/
 src/kpp_cv/data/**/train/
 src/kpp_cv/data/**/val/
 src/kpp_cv/data/**/test/
+*.mp4
+EOF
+git status --short | head -30
