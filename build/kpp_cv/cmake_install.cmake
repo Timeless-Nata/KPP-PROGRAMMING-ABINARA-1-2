@@ -64,3 +64,11 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/kpp_cv" TYPE PROGRAM FILES "/home/nata-negara/Abinara-1/kpp-magang-5/build/kpp_cv/catkin_generated/installspace/shapes_node.py")
 endif()
 
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/kpp_cv" TYPE PROGRAM FILES "/home/nata-negara/Abinara-1/kpp-magang-5/build/kpp_cv/catkin_generated/installspace/colorful_node.py")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/kpp_cv" TYPE PROGRAM FILES "/home/nata-negara/Abinara-1/kpp-magang-5/build/kpp_cv/catkin_generated/installspace/colorful_node.py")
+endif()
+
