@@ -8,9 +8,13 @@ catkin_install_python(PROGRAMS
   scripts/shapes_node.py
   scripts/colorful_node.py
   scripts/denoise_node.py
+  scripts/locate_node.py
   scripts/denoise_node.py
+  scripts/locate_node.py
   scripts/colorful_node.py
   scripts/denoise_node.py
+  scripts/locate_node.py
   scripts/denoise_node.py
+  scripts/locate_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

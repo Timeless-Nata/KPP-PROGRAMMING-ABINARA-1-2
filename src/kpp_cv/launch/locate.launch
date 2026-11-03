@@ -1,0 +1,7 @@
+<launch>
+  <arg name="video"/>
+  <node pkg="kpp_cv" type="publisher_node.py" name="video_publisher" output="screen">
+    <param name="video" value="$(arg video)"/>
+  </node>
+  <node pkg="kpp_cv" type="locate_node.py" name="locate" output="screen"/>
+</launch>
