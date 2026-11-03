@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>kpp_cv</name>
+  <version>0.0.1</version>
+  <description>KPP Computer Vision</description>
+  <maintainer email="you@example.com">nata</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>rospy</depend>
+  <depend>sensor_msgs</depend>
+  <depend>cv_bridge</depend>
+</package>

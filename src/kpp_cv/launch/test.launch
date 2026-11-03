@@ -1,5 +1,5 @@
 <launch>
-  <arg name="video"/>
+  <arg name="video" default="/home/nata-negara/Abinara-1/kpp-magang-5/src/kpp_cv/data/1_where_are_the_shapes/shape_detection_transition.mp4"/>
   <node pkg="kpp_cv" type="publisher_node.py" name="video_publisher" output="screen">
     <param name="video" value="$(arg video)"/>
   </node>

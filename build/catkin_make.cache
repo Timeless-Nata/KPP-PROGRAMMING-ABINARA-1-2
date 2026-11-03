@@ -1,0 +1,2 @@
+kpp_cv
+-DCATKIN_DEVEL_PREFIX=/home/nata-negara/Abinara-1/kpp-magang-5/devel -DCMAKE_INSTALL_PREFIX=/home/nata-negara/Abinara-1/kpp-magang-5/install -G Unix Makefiles
