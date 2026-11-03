@@ -1,0 +1,16 @@
+<launch>
+  <arg name="video"/>
+  <arg name="model" default="$(find kpp_cv)/models/best.pt"/>
+  <arg name="conf" default="0.5"/>
+  <arg name="target" default=""/>
+  <arg name="device" default="cpu"/>
+  <node pkg="kpp_cv" type="publisher_node.py" name="video_publisher" output="screen">
+    <param name="video" value="$(arg video)"/>
+  </node>
+  <node pkg="kpp_cv" type="match_node.py" name="match" output="screen">
+    <param name="model" value="$(arg model)"/>
+    <param name="conf" value="$(arg conf)"/>
+    <param name="target" value="$(arg target)"/>
+    <param name="device" value="$(arg device)"/>
+  </node>
+</launch>

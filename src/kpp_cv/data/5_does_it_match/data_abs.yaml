@@ -1,0 +1,6 @@
+names:
+  0: knight
+path: /home/nata-negara/Abinara-1/kpp-magang-5/src/kpp_cv/data/5_does_it_match
+test: test/images
+train: train/images
+val: val/images

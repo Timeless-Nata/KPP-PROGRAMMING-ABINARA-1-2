@@ -1,2 +1,13 @@
-src/kpp_cv/data/5. Does It Match_/gameplay.mp4
-src/kpp_cv/data/5. Does It Match_/Hollow Knight.yolo26.zip
+# build ROS
+build/
+devel/
+install/
+**/__pycache__/
+*.pyc
+
+# data besar: video, arsip, dan dataset (milik panitia)
+*.zip
+src/kpp_cv/data/**/runs/
+src/kpp_cv/data/**/train/
+src/kpp_cv/data/**/val/
+src/kpp_cv/data/**/test/
